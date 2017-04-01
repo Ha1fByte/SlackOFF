@@ -19,7 +19,9 @@ You can also use this as a way of setting up your own version of a similar bot.
    $export SLACK_BOT_TOKEN='api key goes here'
     
   For script in Rasbian (check out launcher.sh for the rest):
+  
     SLACK_BOT_TOKEN='api key goes here'
+    
     sudo -E python Name_of_program.py 
  
  5) Next you should run the print_bot_id.py program and get the value returned. This is your bot's ID, and this is how your program knows that it's the one being called when you @ it. Follow the same set up at 4) only this time the enviomental variable is BOT_ID. You also only need the sudo once if you're doing the script version.
