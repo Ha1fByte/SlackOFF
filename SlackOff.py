@@ -1,20 +1,23 @@
 import os
 import time
 from slackclient import SlackClient
+import webbrowser
+import glob
+from imgurpython import ImgurClient
 
-# import imgur_setup
+client_id = 'YOURS GOES HERE'
+client_secret = 'YOURS GOES HERE'
 
-# starterbot's ID as an environment variable
-BOT_ID = 'BOT ID HERE'  # os.environ.get("BOT_ID")
-# constants
-# Commands are what the slack bot reads in when you @ it
-AT_BOT = "<@" + str(BOT_ID) + ">"
+imgur_client = ImgurClient(client_id, client_secret)
+
+BOT_ID = 'YOURS GOES HERE'  # os.environ.get("BOT_ID")
+
 EXAMPLE_COMMAND = "do"
 COMMAND_1 = "channel name"
 COMMAND_2 = "channel users"
 
 # instantiate Slack & Twilio clients
-slack_client = SlackClient('YOUR API TOKEN HERE')
+slack_client = SlackClient('YOURS GOES HERE')
 
 
 def list_channels():
@@ -60,10 +63,36 @@ def handle_reaction(reaction):
             if 'reaction' in output:
                 print("\n")
                 print(reaction[0]['reaction'])
-                print(reaction[0]['item']['type'])
-                print('hello?')
-                #temp = slack_client.api_call("file.info", timeout=5)
-                #print(temp['file'])
+                var1 = reaction[0]['item']
+                print(var1['type'])
+                print("\n")
+                if var1['type'] == 'file':
+                    print(var1['file'])
+                    print('hello?')
+                    temp = slack_client.api_call("files.info", timeout=5, file=var1['file'])
+                    print(temp)
+                    if temp['file']['pretty_type'] == 'JPEG' or temp['file']['pretty_type'] == 'PNG':
+                        var3 = slack_client.api_call("files.sharedPublicURL", file=var1['file'])
+                        var2 = temp['file']['url_private_download']
+                        webbrowser.open(var2)
+                        print(var2)
+
+
+                        list_of_files = glob.glob('C:\\Users\\Natalie\\Downloads\\*.jpg')  # * means all if need specific format then *.csv
+                        latest_file = max(list_of_files, key = os.path.getctime)
+                        print(latest_file)
+
+
+
+
+                        config = {
+                            'name': 'Catastrophe!',
+                            'title': 'Catastrophe!',
+                        }
+
+                        image = imgur_client.upload_from_path(latest_file, anon=False)
+                        print("You can find it here: {0}".format(image['link']))
+
     return None
 
 
@@ -102,18 +131,15 @@ if __name__ == "__main__":
         print("StarterBot connected and running!")
         time.sleep(1)
         while True:
-            print("beep")
+            # print("beep")
             time.sleep(1)
+            # imgur_setup.linked()
+            handle_reaction(slack_client.rtm_read())
+            #imgur_client.upload_from_url('https://files.slack.com/files-pri/T2SRNT666-F50F672P2/a43b84819a3cb552d5259392716776e3.png')
             # reaction = parse_reaction_output(slack_client.rtm_read())
-            command, channel = parse_slack_output(slack_client.rtm_read())
-            if command and channel:
-                handle_command(command, channel)
-            else:
-                #print("boop")
-                # handle_reaction(reaction)
-                time.sleep(READ_WEBSOCKET_DELAY)
-                handle_reaction(slack_client.rtm_read())
-            #print(slack_client.rtm_read())
+
+
+            # print(slack_client.rtm_read())
 
 
     else:
