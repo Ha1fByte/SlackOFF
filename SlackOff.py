@@ -5,7 +5,7 @@ from slackclient import SlackClient
 # import imgur_setup
 
 # starterbot's ID as an environment variable
-BOT_ID = 'U44A6ND6Y'  # os.environ.get("BOT_ID")
+BOT_ID = 'BOT ID HERE'  # os.environ.get("BOT_ID")
 # constants
 # Commands are what the slack bot reads in when you @ it
 AT_BOT = "<@" + str(BOT_ID) + ">"
@@ -14,7 +14,7 @@ COMMAND_1 = "channel name"
 COMMAND_2 = "channel users"
 
 # instantiate Slack & Twilio clients
-slack_client = SlackClient('xoxb-140346761236-M4ZyKkmcZbM6OdRhMZxlu3gj')
+slack_client = SlackClient('YOUR API TOKEN HERE')
 
 
 def list_channels():
