@@ -19,14 +19,11 @@ COMMAND_2 = "channel users"
 # instantiate Slack & Twilio clients
 slack_client = SlackClient('YOURS GOES HERE')
 
-
 def list_channels():
     channels_call = slack_client.api_call("channels.list")
     if channels_call.get('ok'):
         return channels_call['channels']
     return None
-
-
 def handle_command(command, channel):
     """
         Receives commands directed at the bot and determines if they
@@ -53,45 +50,40 @@ def handle_command(command, channel):
         # userID = var3["members"][0]["profile"]["first_name"]
         #   response += "" + str(userID)*/
 
-    slack_client.api_call("chat.postMessage", channel=channel,
-                          text=response, as_user=True)
+
 
 
 def handle_reaction(reaction):
     if reaction and len(reaction) > 0:
         for output in reaction:
             if 'reaction' in output:
-                print("\n")
-                print(reaction[0]['reaction'])
+                #print("\n")
+                #print(reaction[0])
                 var1 = reaction[0]['item']
-                print(var1['type'])
+                #print(var1['type'])
                 print("\n")
                 if var1['type'] == 'file':
-                    print(var1['file'])
-                    print('hello?')
+                    #print(var1['file'])
+                    #print('hello?')
                     temp = slack_client.api_call("files.info", timeout=5, file=var1['file'])
-                    print(temp)
+                    #print(temp)
                     if temp['file']['pretty_type'] == 'JPEG' or temp['file']['pretty_type'] == 'PNG':
-                        var3 = slack_client.api_call("files.sharedPublicURL", file=var1['file'])
+                        var3 = temp['file']['url_private']
                         var2 = temp['file']['url_private_download']
                         webbrowser.open(var2)
-                        print(var2)
 
+                        time.sleep(1)
 
                         list_of_files = glob.glob('C:\\Users\\Natalie\\Downloads\\*.jpg')  # * means all if need specific format then *.csv
-                        latest_file = max(list_of_files, key = os.path.getctime)
-                        print(latest_file)
-
-
-
-
-                        config = {
-                            'name': 'Catastrophe!',
-                            'title': 'Catastrophe!',
-                        }
-
+                        latest_file = max(list_of_files, key=os.path.getctime)
                         image = imgur_client.upload_from_path(latest_file, anon=False)
-                        print("You can find it here: {0}".format(image['link']))
+                        user_dm = slack_client.api_call('im.open', user=reaction[0]['user'])
+                        #print(user_dm)
+                        response = "You can find it here: {0}".format(image['link'])
+                        slack_client.api_call("chat.postMessage", channel=user_dm['channel']['id'],text=response, as_user=True)
+
+                        time.sleep(1)
+                        os.remove(latest_file)
 
     return None
 
@@ -146,3 +138,4 @@ if __name__ == "__main__":
         print(BOT_ID)
         print(os.environ.get('SLACK_BOT_TOKEN'))
         print("Connection failed. Invalid Slack token or bot ID?")
+
