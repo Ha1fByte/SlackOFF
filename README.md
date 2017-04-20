@@ -1,7 +1,8 @@
-# SlackOFF
+# SlackOFF!
 Slack bot and server that upload images to Imgur 
 
 Credit to this man for creating the base of the bot I ended up modifying https://github.com/mattmakai/
+I also used the upload methods from the Imgur Python library https://github.com/Imgur/imgurpython
 
 Despite the fact the tutorial I followed goes over this in it, this is the simple way to set up the bot you want using slackOFF.
 You can also use this as a way of setting up your own version of a similar bot.
